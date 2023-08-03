@@ -1,0 +1,7 @@
+build/
+lib/*
+!lib/CMakelists.txt
+.vscode/*
+temp/
+out/
+CMakeUserPresets.json
