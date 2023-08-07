@@ -1,7 +1,4 @@
 build/
-lib/*
-!lib/CMakelists.txt
-.vscode/*
 temp/
-out/
+.vscode/
 CMakeUserPresets.json
