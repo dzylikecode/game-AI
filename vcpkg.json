@@ -1,5 +1,5 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
-  "dependencies": ["raylib", "spdlog", "lua"],
-  "builtin-baseline": "78b61582c9e093fda56a01ebb654be15a0033897"
+  "dependencies": ["spdlog", "ogre", "lua"],
+  "builtin-baseline": "b73601a4616c21923cfb6f3a5263a9788165efbd"
 }
