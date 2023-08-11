@@ -28,7 +28,15 @@ add_library(core STATIC ${CORE_SOURCE_FILES})
 find_package(raylib CONFIG REQUIRED)
 target_link_libraries(core PRIVATE raylib)
 
+# Or use the header-only version
+find_package(spdlog CONFIG REQUIRED)
+target_link_libraries(core PRIVATE spdlog::spdlog_header_only)
+
+find_package(Lua REQUIRED)
+target_include_directories(core PRIVATE ${LUA_INCLUDE_DIR})
+target_link_libraries(core PRIVATE ${LUA_LIBRARIES})
 ########################################################################################################################
 # demo
 
 add_subdirectory(demo)
+add_subdirectory(test)
