@@ -1,25 +1,33 @@
 #pragma once
-#include "utils/type.h"
+#include <Ogre.h>
+#include <OgreApplicationContext.h>
+#include <OgreInput.h>
 
-class BaseApplication {
+#include <memory>
+
+#include "debug/DebugDrawer.h"
+
+using namespace Ogre;
+using namespace OgreBites;
+
+class BaseApplication : public ApplicationContext, public InputListener {
  public:
-  BaseApplication(const String& applicationTitle = "", const int width = 800,
-                  const int height = 600);
-  virtual ~BaseApplication();
+  BaseApplication(const String& appName = "")
+      : ApplicationContext(appName),
+        m_camera(nullptr),
+        m_sceneManager(nullptr) {}
+  virtual ~BaseApplication(){};
+
+  auto getCamera() const { return m_camera; }
+  auto getSceneManager() const { return m_sceneManager; }
+
+  void setup() override;
+
+  bool keyPressed(const KeyboardEvent& evt) override;
 
   void run();
 
-  virtual void init();
-  virtual bool update();
-  virtual void shutdown();
-
  private:
-  String m_applicationTitle;
-  int m_width;
-  int m_height;
-
- private:
-  bool setup();
-  void close();
-  void main();
+  Camera* m_camera;
+  SceneManager* m_sceneManager;
 };

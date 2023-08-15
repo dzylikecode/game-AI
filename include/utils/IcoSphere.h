@@ -1,9 +1,10 @@
 #pragma once
-#include <raylib.h>
+#include <Ogre.h>
 
 #include <map>
 #include <vector>
-using VertexPair = std::pair<Vector3, Color>;
+using namespace Ogre;
+using VertexPair = std::pair<Vector3, ColourValue>;
 
 /**
  * @brief The prefix "Ico" in the IcoSphere class name stands for
@@ -40,7 +41,7 @@ class IcoSphere {
   void create(int recursionLevel);
   void addToLineIndices(int baseIndex, std::vector<int> *target);
   int addToVertices(std::vector<VertexPair> *target, const Vector3 &position,
-                    const Color &colour, float scale);
+                    const ColourValue &colour, float scale);
   void addToTriangleIndices(int baseIndex, std::vector<int> *target);
 
  private:

@@ -1,7 +1,18 @@
 #include <exception>
 #include <iostream>
 
-#include "App/BaseApplication.h"
+#include "App/SandboxApplication.h"
+
+class TestApp : public SandboxApplication {
+ public:
+  TestApp(const String& appName) : SandboxApplication(appName) {}
+  virtual ~TestApp() {}
+
+  void setup() override {
+    SandboxApplication::setup();
+    createSandbox("Sandbox.lua");
+  }
+};
 
 int main(int argc, char** argv) {
 #ifdef MY_OGRE_CONFIG_DIR
@@ -11,7 +22,7 @@ int main(int argc, char** argv) {
   auto res = getenv("OGRE_CONFIG_DIR");
 #endif
   try {
-    BaseApplication app("Hello World");
+    TestApp app("Hello World");
     app.run();
   } catch (const std::exception& e) {
     std::cerr << "Error occurred during execution: " << e.what() << '\n';

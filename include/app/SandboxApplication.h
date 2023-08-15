@@ -1,91 +1,41 @@
 #pragma once
+#include <memory>
 #include <string>
 
 #include "app/BaseApplication.h"
-#include "resources/LuaFileManager.h"
-#include "sandbox/Sandbox.h"
-#include "utils/Timer.h"
+#include "object/Sandbox.h"
 
 class SandboxApplication : public BaseApplication {
  public:
-  SandboxApplication(const String& applicationTitle, const int width = 800,
-                     const int height = 600);
-  virtual ~SandboxApplication();
+  SandboxApplication(const String& appName) : BaseApplication(appName) {
+    m_timer.reset();
+    lastRenderTime = m_timer.getMicroseconds();
+    lastUpdateTime = m_timer.getMicroseconds();
+  }
+  virtual ~SandboxApplication() {}
 
-  virtual void init() override;
-  /**
-   * @brief
-   *
-   * @return true if the application should continue running, false otherwise.
-   */
-  virtual bool update() override;
-  virtual void shutdown() override;
+  void setup() override;
+  void shutdown() override;
+
+  bool frameStarted(const FrameEvent& evt) override;
+  bool frameEnded(const FrameEvent& evt) override;
 
   void createSandbox(const String& scriptName);
+  void addResourceLocation(const String& location) {
+    ResourceGroupManager::getSingleton().addResourceLocation(location,
+                                                             "FileSystem");
+  }
 
  private:
   Timer m_timer;
-  double m_lastUpdateTime;
+  uint64_t lastRenderTime;
+  uint64_t lastUpdateTime;  // sandbox update time
 
-  Sandbox* m_sandbox;
+  shared_ptr<Sandbox> m_sandbox;
+
+  int m_sandboxId;
+  std::unique_ptr<DebugDrawerAI> m_debugDrawer;
 
  private:
-  void handleInput();
-  void updateSandBox();
+  int generateSandboxId() { return m_sandboxId++; }
 };
-
-// #include "utils/Timer.h"
-// #include "utils/type.h"
-
-// class LuaFileManager;
-// class Sandbox;
-
-// class SandboxApplication : public BaseApplication {
-//  public:
-//   SandboxApplication(const String& applicationTitle);
-
-//   virtual ~SandboxApplication();
-
-//   void AddResourceLocation(const String& location);
-
-//   virtual void Cleanup();
-
-//   virtual void CreateSandbox(const String& sandboxLuaScript);
-
-//   virtual void Draw();
-
-//   int GenerateSandboxId();
-
-//   virtual Sandbox* GetSandbox();
-
-//   virtual void HandleKeyPress(const KeyCode keycode, unsigned int key);
-
-//   virtual void HandleKeyRelease(const KeyCode keycode, unsigned int key);
-
-//   virtual void HandleMouseMove(const int width, const int height);
-
-//   virtual void HandleMousePress(const int width, const int height,
-//                                 const OIS::MouseButtonID button);
-
-//   virtual void HandleMouseRelease(const int width, const int height,
-//                                   const OIS::MouseButtonID button);
-
-//   virtual void Initialize();
-
-//   virtual void Update();
-
-//  private:
-//  private:
-//   double m_lastUpdateTimeInMicro;
-//   double m_lastUpdateCallTime;
-
-//   LuaFileManager* m_luaFileManager;
-
-//   Sandbox* m_sandbox;
-//   Timer m_timer;
-
-//   int m_lastSandboxId;
-
-//   SandboxApplication(const SandboxApplication&);
-//   SandboxApplication& operator=(const SandboxApplication&);
-// };

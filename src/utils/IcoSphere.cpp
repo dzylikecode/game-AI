@@ -1,7 +1,5 @@
 #include "utils/IcoSphere.h"
 
-#include <raymath.h>
-
 #include <cmath>
 
 IcoSphere::IcoSphere() : index(0) {}
@@ -138,7 +136,7 @@ void IcoSphere::addTriangleLines(int index0, int index1, int index2) {
 }
 
 int IcoSphere::addVertex(const Vector3 &vertex) {
-  vertices.push_back(Vector3Normalize(vertex));
+  vertices.push_back(vertex.normalisedCopy());
   return index++;
 }
 
@@ -155,13 +153,13 @@ int IcoSphere::getMiddlePoint(int index0, int index1) {
   if (middlePointIndexCache.find(key) != middlePointIndexCache.end())
     return middlePointIndexCache[key];
 
-  Vector3 point1 = vertices[index0];
-  Vector3 point2 = vertices[index1];
-  Vector3 middle =
+  auto point1 = vertices[index0];
+  auto point2 = vertices[index1];
+  auto middle =
       Vector3{(point1.x + point2.x) / 2.0f, (point1.y + point2.y) / 2.0f,
               (point1.z + point2.z) / 2.0f};
 
-  int index = addVertex(middle);
+  auto index = addVertex(middle);
   middlePointIndexCache[key] = index;
   return index;
 }
@@ -188,16 +186,15 @@ void IcoSphere::addToTriangleIndices(int baseIndex, std::vector<int> *target) {
 }
 
 int IcoSphere::addToVertices(std::vector<VertexPair> *target,
-                             const Vector3 &position, const Color &colour,
+                             const Vector3 &position, const ColourValue &colour,
                              float scale) {
   // tranlate first then scale, res = transform * scale * vertices
-  Matrix transform =
-      MatrixMultiply(MatrixScale(scale, scale, scale),
-                     MatrixTranslate(position.x, position.y, position.z));
+  Matrix4 transform = Matrix4::IDENTITY;
+  transform.setTrans(position);
+  transform.setScale(Vector3(scale, scale, scale));
 
   for (size_t i = 0; i < vertices.size(); i++)
-    target->push_back(
-        VertexPair(Vector3Transform(vertices[i], transform), colour));
+    target->push_back(VertexPair(transform * vertices[i], colour));
 
   return static_cast<int>(vertices.size());
 }
